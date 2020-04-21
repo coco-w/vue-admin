@@ -1,20 +1,18 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登录管理系统</h3>
       </div>
-
-      <el-form-item prop="username">
+      <el-form-item prop="account">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="account"
+          v-model="loginForm.account"
           placeholder="Username"
-          name="username"
+          name="account"
           type="text"
           tabindex="1"
           autocomplete="on"
@@ -46,63 +44,34 @@
       </el-tooltip>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
-      <div style="position:relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
-
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button>
-      </div>
     </el-form>
-
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import SocialSign from './components/SocialSignin'
+import { baseUrl } from '@/api/index'
 
 export default {
   name: 'Login',
-  components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+      if (value.trim() !== 'admin') {
+        callback(new Error('请使用admin账号登录'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        account: 'admin',
+        password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        account: [
+          { required: true, message: '请使用admin账号登录', trigger: 'blur' },
+          { validator: validateUsername, trigger: 'blur' }
+        ],
+        password: [{ required: true, trigger: 'blur' }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -126,10 +95,11 @@ export default {
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    console.log(baseUrl)
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
+    if (this.loginForm.account === '') {
+      this.$refs.account.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
@@ -161,7 +131,10 @@ export default {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
             })
-            .catch(() => {
+            .catch((error) => {
+              if (error) {
+                this.$message.error('账号或密码错误')
+              }
               this.loading = false
             })
         } else {

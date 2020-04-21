@@ -1,10 +1,10 @@
 import request from '@/utils/request'
-
+import { baseUrl } from './index'
 export function login(data) {
   return request({
-    url: '/vue-element-admin/user/login',
+    url: `${baseUrl}/api/enterpriseUser/token`,
     method: 'post',
-    data
+    params: data
   })
 }
 

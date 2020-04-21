@@ -1,7 +1,7 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
-
+// const ipConfig = require('./public/ipConfig')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -14,6 +14,7 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 // You can change the port by the following method:
 // port = 9527 npm run dev OR npm run dev --port = 9527
 const port = process.env.port || process.env.npm_config_port || 9527 // dev port
+// const Base_URL = process.env.NODE_ENV === 'production' ? ipConfig : 'http://192.168.3.200:8092'
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -35,6 +36,22 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
+    },
+    proxy: {
+      '/api1': {
+	      target: 'http://192.168.3.200:8092', // 你接口的域名  http://172.00.61.243:8082
+
+        //secure: false,      // 如果是https接口，需要配置这个参数
+
+        changeOrigin: true,     // 如果接口跨域，需要进行这个参数配置
+
+        pathRewrite: {
+
+          '^/api1': ''
+
+        }
+
+      }
     },
     before: require('./mock/mock-server.js')
   },

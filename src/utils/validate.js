@@ -85,3 +85,13 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+/**
+ * @param {string} PhoneNumber
+ * @returns {Boolean}
+ */
+export function validPhone(phone) {
+  const reg = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/
+  const reg1 = /\d{3}-\d{8}|\d{4}-\d{7}/
+  return reg.test(phone) || reg1.test(phone)
+}

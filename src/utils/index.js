@@ -353,3 +353,58 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+export function arrToStr(arr) {
+  let str = ''
+  arr.forEach((ele, index) => {
+    if (index === arr.length - 1) {
+      str += `${ele}`
+    } else {
+      str += `${ele},`
+    }
+  })
+  return str
+}
+
+/**
+ * @param {string} time
+ * @returns {string}
+ */
+export function timeDifference(time) {
+  const now = new Date().getTime()
+  const p = new Date(time).getTime()
+  // debugger
+  let str = ''
+  if (now > p) {
+    str = `${temp(now, p)}天前`
+  } else {
+    str = `${temp(p, now)}天`
+  }
+  return str
+  function temp(a, b) {
+    const c = (a - b) / 3600 / 1000 / 24
+    const d = Math.floor(c)
+    return d
+  }
+}
+
+/**
+ * @param {string} value
+ * @param {Array} data
+ * @param {string} key
+ * @param {string} label
+ * @returns {string}
+ */
+
+export function tableShowSelect(value, data, key, label) {
+  let l = ''
+  // debugger
+  for (let i = 0; i < data.length; i++) {
+    const ele = data[i]
+    if (ele[key] === value) {
+      l = ele[label]
+      break
+    }
+  }
+  return l
+}
